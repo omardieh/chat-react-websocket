@@ -1,0 +1,23 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.username {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.username h4 {
+  margin: 0;
+}
+
+.username input {
+  margin-left: 0.5em;
+  margin-bottom: 1em;
+}
