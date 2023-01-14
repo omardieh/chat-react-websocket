@@ -5,6 +5,7 @@ import ScreenMessages from "../../components/ChatScreen/ScreenMessages";
 import SubmitBar from "../../components/ChatScreen/SubmitBar";
 
 function Chat() {
+  console.log(process.env.REACT_APP_SERVER_PORT);
   const SERVER_PORT = 4000;
   const socket = socketIOClient(`http://localhost:${SERVER_PORT}`);
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -39,20 +40,26 @@ function Chat() {
   };
 
   const submitNewMessage = () => {
-    socket.emit("MessageToServer", {
-      message: message.text,
-      author: message.author,
-    });
+    if (message.author && message.text) {
+      socket.emit("MessageToServer", {
+        message: message.text,
+        author: message.author,
+      });
+      setMessage((prev) => ({ ...prev, text: "" }));
+    } else {
+      alert("oops, please fill in username and message before submitting");
+    }
   };
 
   return (
     <div>
-      <ChatScreen>
+      <ChatScreen
+        onChange={(e) => handleInputChange(e, "author", setMessage)}
+        inputValue={message.author}
+      >
         <ScreenMessages messages={messages} />
         <SubmitBar
-          input={message}
-          setInput={setMessage}
-          inputFor={"text"}
+          inputValue={message.text}
           onClick={submitNewMessage}
           onChange={(e) => handleInputChange(e, "text", setMessage)}
         />

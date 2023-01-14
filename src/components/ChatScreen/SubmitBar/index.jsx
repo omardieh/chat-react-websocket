@@ -1,10 +1,10 @@
 import React from "react";
 import classes from "./SubmitBar.module.css";
 
-function SubmitBar({ input, onClick, onChange }) {
+function SubmitBar({ inputValue, onClick, onChange }) {
   return (
     <div className={classes.submitBar}>
-      <input value={input.text} onChange={onChange} />
+      <input value={inputValue} onChange={onChange} />
       <button onClick={onClick}>send</button>
     </div>
   );

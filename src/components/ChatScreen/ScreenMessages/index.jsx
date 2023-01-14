@@ -7,7 +7,7 @@ function ScreenMessages({ messages }) {
       <ul>
         {messages.map((e, i) => (
           <li key={i}>
-            <b>{e.author}: </b> {e.message}
+            <b>{e.author} : </b> {e.message}
           </li>
         ))}
       </ul>

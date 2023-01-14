@@ -4,10 +4,8 @@
   width: 90%;
   min-height: 50em;
   margin: auto;
-  border: 1px solid white;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
   border-radius: 7px;
 }
