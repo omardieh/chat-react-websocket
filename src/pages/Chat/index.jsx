@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
+import ChatScreen from "../../components/ChatScreen";
+import ScreenMessages from "../../components/ChatScreen/ScreenMessages";
+import SubmitBar from "../../components/ChatScreen/SubmitBar";
 
 function Chat() {
   const SERVER_PORT = 4000;
@@ -44,16 +47,16 @@ function Chat() {
 
   return (
     <div>
-      <input
-        value={message.text}
-        onChange={(e) => handleInputChange(e, "text")}
-      />
-      <input
-        value={message.author}
-        onChange={(e) => handleInputChange(e, "author")}
-      />
-      <button onClick={submitNewMessage}>send</button>
-      {JSON.stringify(messages)}
+      <ChatScreen>
+        <ScreenMessages messages={messages} />
+        <SubmitBar
+          input={message}
+          setInput={setMessage}
+          inputFor={"text"}
+          onClick={submitNewMessage}
+          onChange={(e) => handleInputChange(e, "text", setMessage)}
+        />
+      </ChatScreen>
     </div>
   );
 }
