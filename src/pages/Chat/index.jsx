@@ -5,8 +5,8 @@ import ScreenMessages from "../../components/ChatScreen/ScreenMessages";
 import SubmitBar from "../../components/ChatScreen/SubmitBar";
 
 function Chat() {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const socket = socketIOClient(`${SERVER_URL}`);
+  const SERVER_PORT = process.env.REACT_APP_SERVER_PORT;
+  const socket = socketIOClient(`http://localhost:4000`);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState({
