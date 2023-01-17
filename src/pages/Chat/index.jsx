@@ -28,13 +28,13 @@ function Chat() {
       setMessages((messages) => [...messages, msg]);
     });
     return () => socket.disconnect();
-  }, [socket]);
+  }, [socket, setMessages]);
 
   const submitNewMessage = () => {
     socket.emit("MessageToServer", message, () => setMessage(""));
     setMessage("");
   };
-
+  console.log(messages);
   return (
     <div>
       <>
@@ -47,7 +47,10 @@ function Chat() {
             );
           })}
       </>
-      <>room: {room.slice(0, 1).toUpperCase() + room.slice(1)}</>
+      <>
+        room: {console.log(room)}
+        {room.slice(0, 1).toUpperCase() + room.slice(1)}
+      </>
       <>
         {messages.length > 0 ? (
           messages.map((msg, i) => (
@@ -80,14 +83,18 @@ function Chat() {
           </button>
         </form>
       </>
-      {/* <ChatScreen>
+      <ChatScreen
+        user={name}
+        room={room.slice(0, 1).toUpperCase() + room.slice(1)}
+      >
         <ScreenMessages messages={messages} />
         <SubmitBar
-          inputValue={message.text}
+          inputValue={message}
           onClick={submitNewMessage}
-          onChange={(e) => handleInputChange(e, "text", setMessage)}
+          onChange={(e) => setMessage(e.target.value)}
+          disabled={message === "" ? true : false}
         />
-      </ChatScreen> */}
+      </ChatScreen>
     </div>
   );
 }

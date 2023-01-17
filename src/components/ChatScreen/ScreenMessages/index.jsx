@@ -16,9 +16,9 @@ function ScreenMessages({ messages }) {
     <section className={classes.screen}>
       {messages.map((e, i) => (
         <div ref={divRef} className={classes.message} key={i}>
-          <span className={classes.spanAuthor}>{e.author}</span>
+          <span className={classes.spanAuthor}>{e.user}</span>
           <span className={classes.spanDate}> {e.date} </span>
-          <p className={classes.pMessage}>{e.message}</p>
+          <p className={classes.pMessage}>{e.text}</p>
         </div>
       ))}
     </section>

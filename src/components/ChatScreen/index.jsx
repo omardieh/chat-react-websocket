@@ -1,15 +1,21 @@
 import React from "react";
 import classes from "./ChatScreen.module.css";
 
-function ChatScreen({ children, onChange, inputValue }) {
+function ChatScreen({ children, onChange, inputValue, user, room }) {
   return (
-    <div className={classes.screen}>
-      <div className={classes.username}>
-        <h4>username :</h4>
-        <input value={inputValue} onChange={onChange} />
+    <section className={classes.screen}>
+      <div className={classes.inputWrapper}>
+        <div>
+          <h4>name :</h4>
+          <input value={user} disabled onChange={onChange} />
+        </div>
+        <div>
+          <h4>room :</h4>
+          <input value={room} onChange={onChange} disabled />
+        </div>
       </div>
       {children}
-    </div>
+    </section>
   );
 }
 
