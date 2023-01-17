@@ -1,68 +1,93 @@
-import React, { useEffect, useState } from "react";
-import socketIOClient from "socket.io-client";
+import React, { useContext, useEffect, useState } from "react";
 import ChatScreen from "../../components/ChatScreen";
 import ScreenMessages from "../../components/ChatScreen/ScreenMessages";
 import SubmitBar from "../../components/ChatScreen/SubmitBar";
+import { handleInputChange } from "../../handlers/handle-input-change";
+import { UsersContext } from "../../context/UsersContext";
+import { SocketContext } from "../../context/SocketContext";
+import { MainContext } from "../../context/MainContext";
+import { useNavigate } from "react-router-dom";
 
 function Chat() {
-  const SERVER_PORT = process.env.REACT_APP_SERVER_PORT;
-  const socket = socketIOClient(`http://localhost:4000`);
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState({
-    text: "",
-    author: "",
-  });
+  const { users } = useContext(UsersContext);
+  const { name, room, messages, setName, setRoom, setMessages } =
+    useContext(MainContext);
+  const socket = useContext(SocketContext);
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    socket.on("connect", () => {
-      setIsConnected(true);
-    });
+    if (!name) {
+      alert("you need to be logged in first");
+      return navigate("/login");
+    }
+  }, [navigate, name]);
 
-    socket.on("MessagesFromServer", (messagesFromServer) => {
-      setMessages(messagesFromServer);
+  useEffect(() => {
+    socket.on("MessageToClient", (msg) => {
+      setMessages((messages) => [...messages, msg]);
     });
-
-    socket.on("MessageToClient", (MessageToClient) => {
-      setMessages((prev) => [...prev, MessageToClient]);
-    });
-
-    socket.on("disconnect", () => {
-      setIsConnected(false);
-    });
-
     return () => socket.disconnect();
-  }, []);
-
-  const handleInputChange = (event, key) => {
-    setMessage((prev) => ({ ...prev, [key]: event.target.value }));
-  };
+  }, [socket]);
 
   const submitNewMessage = () => {
-    if (message.author && message.text) {
-      socket.emit("MessageToServer", {
-        message: message.text,
-        author: message.author,
-      });
-      setMessage((prev) => ({ ...prev, text: "" }));
-    } else {
-      alert("oops, please fill in username and message before submitting");
-    }
+    socket.emit("MessageToServer", message, () => setMessage(""));
+    setMessage("");
   };
 
   return (
     <div>
-      <ChatScreen
-        onChange={(e) => handleInputChange(e, "author", setMessage)}
-        inputValue={message.author}
-      >
+      <>
+        {users &&
+          users.map((user) => {
+            return (
+              <div key={user.id}>
+                <div>user: {user.name}</div>
+              </div>
+            );
+          })}
+      </>
+      <>room: {room.slice(0, 1).toUpperCase() + room.slice(1)}</>
+      <>
+        {messages.length > 0 ? (
+          messages.map((msg, i) => (
+            <div key={i}>
+              <div>{msg.user}</div>
+              <div>{msg.text}</div>
+            </div>
+          ))
+        ) : (
+          <div>
+            <div>-----</div>
+            <div>No messages</div>
+            <div>-----</div>
+          </div>
+        )}
+      </>
+      <>
+        <form>
+          <input
+            type="text"
+            placeholder="Enter Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <button
+            onClick={submitNewMessage}
+            disabled={message === "" ? true : false}
+          >
+            Send
+          </button>
+        </form>
+      </>
+      {/* <ChatScreen>
         <ScreenMessages messages={messages} />
         <SubmitBar
           inputValue={message.text}
           onClick={submitNewMessage}
           onChange={(e) => handleInputChange(e, "text", setMessage)}
         />
-      </ChatScreen>
+      </ChatScreen> */}
     </div>
   );
 }
