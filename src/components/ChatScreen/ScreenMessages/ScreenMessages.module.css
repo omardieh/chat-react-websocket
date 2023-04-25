@@ -10,14 +10,29 @@
   background: whitesmoke;
 }
 
-.screen ul {
+.message {
   width: 100%;
-  list-style: none;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  border-bottom: 1px solid #ccc;
 }
 
-.screen ul li {
-  width: fit-content;
+.spanDate {
+  font-size: x-small;
+  flex-basis: 50%;
+  text-align: end;
+}
+
+.spanAuthor {
+  font-weight: bold;
+  flex-basis: 50%;
+}
+
+.spanMessage {
+  width: 100%;
+  flex-basis: 100%; /* width/height  - initial value: auto */
 }
